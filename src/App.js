@@ -1,24 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import * as React from 'react';
+import { Stage } from 'react-pixi-fiber';
+import RotatingBunny from './games/RotatingBunny';
+import { Provider } from 'react-redux';
+
+import store from './store';
+import { CounterDOM, CounterPixi } from 'components/Counter';
+
+const width = 600;
+const height = 400;
+const options = {
+  backgroundColor: 0x56789a,
+  resolution: window.devicePixelRatio,
+  width: width,
+  height: height,
+};
+const style = {
+  width: width,
+  height: height,
+};
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Provider store={store}>
+        <CounterDOM />
+      </Provider>
+      <hr />
+      <Stage options={options} style={style}>
+        <Provider store={store}>
+          <CounterPixi position="0,0" />
+          <RotatingBunny position="100,100" />
+        </Provider>
+      </Stage>
+    </>
   );
 }
 
