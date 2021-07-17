@@ -1,3 +1,55 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.map {
+  position: relative;
+}
+.map img {
+  opacity: 0.4;
+}
+.map span {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50px;
+  top: 52%;
+  left: 23%;
+  background-color: #fff;
+
+  /*Now i create highlight animation*/
+  animation: highlight 1.5s linear infinite;
+}
+
+@keyframes highlight {
+  100% {
+    transform: scale(5);
+    opacity: 0;
+  }
+}
+
+/*Same thing i set different location*/
+.map .marker2 {
+  left: 99%;
+  top: 66%;
+  animation-delay: 0.5s;
+}
+.map .marker3 {
+  left: 70%;
+  top: 77%;
+  animation-delay: 1s;
+}
+.map .marker4 {
+  left: 10%;
+  top: 30%;
+  animation-delay: 0.7s;
+}
+.map .marker5 {
+  left: 68%;
+  top: 25%;
+  animation-delay: 1s;
+}
+.map .marker6 {
+  left: 80%;
+  top: 30%;
+}

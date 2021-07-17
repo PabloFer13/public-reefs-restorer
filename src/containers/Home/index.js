@@ -1,4 +1,5 @@
 import VerticalTabs from 'components/Tabs/VerticalTabs';
+import Map from 'components/Map';
 import { Link } from 'react-router-dom';
 
 const Home = () => {
@@ -54,9 +55,10 @@ const Home = () => {
   ];
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen bg-gray-800">
       <div className="m-auto">
-        <VerticalTabs tabs={tabs} />
+        {/* <VerticalTabs tabs={tabs} /> */}
+        <Map />
       </div>
     </div>
   );
