@@ -1,6 +1,7 @@
 import { useState, createRef } from 'react';
 import { createPopper } from '@popperjs/core';
 import { Link } from 'react-router-dom';
+import Marker from 'components/Marker';
 
 const Popover = ({ id, color, title, desc, path }) => {
   const [popoverShow, setPopoverShow] = useState(false);
@@ -15,16 +16,17 @@ const Popover = ({ id, color, title, desc, path }) => {
   const closePopover = () => {
     setPopoverShow(false);
   };
+  const markerProps = {
+    id,
+    btnRef,
+    onMouseEnter: openPopover,
+    onMouseLeave: closePopover,
+  };
   return (
     <>
       <div className="flex flex-wrap">
         <Link to={path} className="w-full text-center">
-          <span
-            className={`marker${id} cursor-pointer`}
-            onMouseEnter={() => openPopover()}
-            onMouseLeave={() => closePopover()}
-            ref={btnRef}
-          />
+          <Marker {...markerProps} />
           <div
             className={
               (popoverShow ? '' : 'hidden ') +
