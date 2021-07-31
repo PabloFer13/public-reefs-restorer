@@ -1560,6 +1560,11 @@
   dependencies:
     "@pixi/core" "6.0.4"
 
+"@pixi/filter-simple-lightmap@^4.1.3":
+  version "4.1.3"
+  resolved "https://registry.yarnpkg.com/@pixi/filter-simple-lightmap/-/filter-simple-lightmap-4.1.3.tgz#f563abc9a8f3804986acf2caef577f087963af20"
+  integrity sha512-8+zJMU5OHA3NzTiuW8UB80TclDp2N5TxMe56oEB6AzzPecZ7dp7qg0hshVINity97fhb0QEkGAlFtk33MPoo9A==
+
 "@pixi/graphics@6.0.4":
   version "6.0.4"
   resolved "https://registry.yarnpkg.com/@pixi/graphics/-/graphics-6.0.4.tgz#3d2e75acb8145a80275b194413b06fb28505c663"

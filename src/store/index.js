@@ -1,6 +1,7 @@
 import { combineReducers, createStore, applyMiddleware } from 'redux';
 import createSagaMiddleware from 'redux-saga'
 import rootSaga from '../sagas';
+import reducers from '../reducers';
 
 function counterReducer(state = { count: 0, sagasCompleted: 0 }, action) {
   if (action.type === 'INCREMENT') {
@@ -25,7 +26,7 @@ function counterReducer(state = { count: 0, sagasCompleted: 0 }, action) {
 
 const sagaMiddleware = createSagaMiddleware()
 
-const rootReducer = combineReducers({ counter: counterReducer });
+const rootReducer = combineReducers({ counter: counterReducer, ...reducers });
 
 const store = createStore(rootReducer, applyMiddleware(sagaMiddleware));
 
