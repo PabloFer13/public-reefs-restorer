@@ -21,7 +21,19 @@ const OPTIONS = {
   },
 };
 
-const lightmapFilter = new SimpleLightmapFilter(new PIXI.Texture.from(lightmap), [50,0,0,0.015]);
+const lightmapFilter = new SimpleLightmapFilter(
+  new PIXI.Texture.from(lightmap),
+  [50, 0, 0, 0.015]
+);
+
+const ResourceItem = ({ name, image, alt }) => (
+  <figure className="flex">
+    <img width="25px" height="25px" src={image} alt={alt} />
+    <p className="text-white">
+      :<span className="ml-4">{name}</span>
+    </p>
+  </figure>
+);
 
 const Level = () => {
   // const bgMusic = new Howl({
@@ -40,7 +52,7 @@ const Level = () => {
   const [filters, setFilters] = useState([lightmapFilter]);
   const displacementRef = useRef(null);
   const dispatch = useDispatch();
-  const resources = useSelector(({ level: { resources }}) => resources);
+  const resources = useSelector(({ level: { resources } }) => resources);
 
   useEffect(() => {
     const animate = () => {
@@ -63,51 +75,60 @@ const Level = () => {
 
   const removeFilter = () => {
     setFilters(([x, ...prev]) => [...prev]);
-  }
+  };
 
   const { gold, rocks, pearls, wood } = resources;
+  const resourcesMenu = [
+    {
+      name: pearls,
+      image: pearlImg,
+      alt: 'pearl',
+    },
+    {
+      name: wood,
+      image: woodImg,
+      alt: 'wood',
+    },
+    {
+      name: rocks,
+      image: rockImg,
+      alt: 'rock',
+    },
+    {
+      name: gold,
+      image: pearlImg,
+      alt: 'pearl',
+    },
+  ];
 
   return (
     <div className="flex flex-col w-screen h-screen bg-gray-800 justify-around">
-      <div className="flex flex-row justify-around content-center w-full h-10">
-        <div className="flex justify-around flex-1 h-full">
-          <div><img width="25px" height="25px" src={pearlImg} alt="pearl" /></div>
-          <div className="text-white">{pearls}</div>
-        </div>
-        <div className="flex justify-around flex-1 h-full">
-          <div><img width="25px" height="25px" src={woodImg} alt="wood" /></div>
-          <div className="text-white">{wood}</div>
-        </div>
-        <div className="flex justify-around flex-1 h-full">
-          <div><img width="25px" height="25px" src={rockImg} alt="rock" /></div>
-          <div className="text-white">{rocks}</div>
-        </div>
-        <div className="flex justify-around flex-1 h-full">
-          <div><img width="25px" height="25px" src={pearlImg} alt="pearl" /></div>
-          <div className="text-white">{gold}</div>
-        </div>
-        <div className="flex justify-around flex-1 h-full">
-          {/* <div><img width="25px" height="25px" src={pearl} /></div>
-          <div className="text-white">9999</div> */}
-          <button className="text-white" type="button" onClick={removeFilter}>RM Filter</button>
+      <div className="flex justify-around">
+        {resourcesMenu.map(resourceProps => (
+          <ResourceItem {...resourceProps} />
+        ))}
+        <div className="">
+          <button className="text-white" type="button" onClick={removeFilter}>
+            RM Filter
+          </button>
         </div>
       </div>
       <div className="mx-auto">
-      <Stage options={OPTIONS} width={900} height={1000} filters={filters}>
-      <Sprite
-        texture={PIXI.Texture.from(
-          reef, { scaleMode: PIXI.SCALE_MODES.LINEAR }
-        )}
-      />
+        <Stage options={OPTIONS} width={900} height={1000} filters={filters}>
+          <Sprite
+            texture={PIXI.Texture.from(reef, {
+              scaleMode: PIXI.SCALE_MODES.LINEAR,
+            })}
+          />
 
-      <Sprite
-        texture={PIXI.Texture.from(
-          'https://cdna.artstation.com/p/assets/images/images/009/070/412/large/alisha-bannister-sarno-alishabs-clouds.jpg?1516950864'
-        )}
-        ref={displacementRef}
-      />
-      <LevelMenu position="0,0" />
-    </Stage>
+          <Sprite
+            texture={PIXI.Texture.from(
+              'https://cdna.artstation.com/p/assets/images/images/009/070/412/large/alisha-bannister-sarno-alishabs-clouds.jpg?1516950864'
+            )}
+            ref={displacementRef}
+          />
+          <LevelMenu position="0,0" />
+        </Stage>
       </div>
     </div>
   );
