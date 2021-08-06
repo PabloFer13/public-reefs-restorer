@@ -2,6 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Pixel-Art Regular';
+  font-style: normal;
+  font-weight: normal;
+  src: url('assets/fonts/pixelart.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'bubble';
+  src: url('assets/fonts/bubble.TTF') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'pixel';
+  src: url('assets/fonts/pixel.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Refactor into a styled component and tailwind */
 
 .map span {

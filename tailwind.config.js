@@ -13,6 +13,11 @@ module.exports = {
         'spin-slow': 'spin 20s linear infinite',
       },
     },
+    fontFamily: {
+      bubble: ['bubble', 'Helvetica', 'Arial', 'sans-serif'],
+      pixel: ['pixel', 'Helvetica', 'Arial', 'sans-serif'],
+      pixelart: ['Pixel-Art Regular'],
+    },
   },
   variants: {
     extend: {},

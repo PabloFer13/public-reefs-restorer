@@ -26,11 +26,11 @@ const lightmapFilter = new SimpleLightmapFilter(
   [50, 0, 0, 0.015]
 );
 
-const ResourceItem = ({ name, image, alt }) => (
-  <figure className="flex">
-    <img width="25px" height="25px" src={image} alt={alt} />
-    <p className="text-white">
-      :<span className="ml-4">{name}</span>
+const ResourceItem = ({ amount, image, alt }) => (
+  <figure className="flex py-1">
+    <img src={image} alt={alt} className="h-6 w-6" />
+    <p className="text-white font-bubble">
+      :<span className="ml-4">{amount}</span>
     </p>
   </figure>
 );
@@ -80,58 +80,81 @@ const Level = () => {
   const { gold, rocks, pearls, wood } = resources;
   const resourcesMenu = [
     {
-      name: pearls,
+      amount: pearls,
       image: pearlImg,
       alt: 'pearl',
     },
     {
-      name: wood,
+      amount: wood,
       image: woodImg,
       alt: 'wood',
     },
     {
-      name: rocks,
+      amount: rocks,
       image: rockImg,
       alt: 'rock',
     },
     {
-      name: gold,
+      amount: gold,
       image: pearlImg,
       alt: 'pearl',
     },
   ];
 
   return (
-    <div className="flex flex-col w-screen h-screen bg-gray-800 justify-around">
-      <div className="flex justify-around">
-        {resourcesMenu.map(resourceProps => (
-          <ResourceItem {...resourceProps} />
-        ))}
-        <div className="">
-          <button className="text-white" type="button" onClick={removeFilter}>
-            RM Filter
-          </button>
-        </div>
-      </div>
-      <div className="mx-auto">
-        <Stage options={OPTIONS} width={900} height={1000} filters={filters}>
-          <Sprite
-            texture={PIXI.Texture.from(reef, {
-              scaleMode: PIXI.SCALE_MODES.LINEAR,
-            })}
-          />
+    <Stage
+      options={OPTIONS}
+      width={1}
+      height={1}
+      filters={filters}
+      className="h-screen w-screen">
+      <Sprite
+        texture={PIXI.Texture.from(reef, {
+          scaleMode: PIXI.SCALE_MODES.LINEAR,
+        })}
+      />
 
-          <Sprite
-            texture={PIXI.Texture.from(
-              'https://cdna.artstation.com/p/assets/images/images/009/070/412/large/alisha-bannister-sarno-alishabs-clouds.jpg?1516950864'
-            )}
-            ref={displacementRef}
-          />
-          <LevelMenu position="0,0" />
-        </Stage>
-      </div>
-    </div>
+      <Sprite
+        texture={PIXI.Texture.from(
+          'https://cdna.artstation.com/p/assets/images/images/009/070/412/large/alisha-bannister-sarno-alishabs-clouds.jpg?1516950864'
+        )}
+        ref={displacementRef}
+      />
+      <LevelMenu position="0,0" />
+    </Stage>
   );
 };
 
 export default withApp(Level);
+
+//ignore. could be usefull for menu styling
+
+/* <div className="h-screen bg-gray-800">
+      <div className="">
+        <div className="py-20 px-24">
+          <div className="border-4 p-8 border-yellow-400">
+            <p className="text-center text-white text-6xl font-bubble">
+              Arrecife del Oceano Pacífico
+            </p>
+          </div>
+        </div>
+        <div className="flex flex-row">
+          <div className="flex mx-auto my-auto">
+            <div className="grid justify-items-center">
+              {resourcesMenu.map(resourceProps => (
+                <ResourceItem {...resourceProps} />
+              ))}
+              <div className="">
+                <button
+                  className="text-white"
+                  type="button"
+                  onClick={removeFilter}>
+                  RM Filter
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className=""></div>
+        </div>
+      </div>
+    </div> */
