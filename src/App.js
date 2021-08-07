@@ -14,6 +14,7 @@ import Level from 'containers/Level';
 // import Level3 from 'containers/Level3';
 
 import BunnyWithCounter from 'games/BunnyWithCounter';
+import SlidePuzzle from 'games/SlidePuzzle';
 import Memory from 'games/Memory';
 
 const App = () => (
@@ -25,6 +26,7 @@ const App = () => (
         <Route exact path="/golfo-de-mexico" component={Level} />
         <Route exact path="/oceano-pacifico" component={Level} />
         <Route exact path="/bunny-with-counter" component={BunnyWithCounter} />
+        <Route exact path="/slidepuzzle" component={SlidePuzzle} />
         <Route exact path="/memory" component={Memory} />
         <Redirect to="/" />
       </Switch>
