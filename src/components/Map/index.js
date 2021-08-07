@@ -3,8 +3,8 @@ import Popover from 'components/Popover';
 
 const Map = ({ reefs }) => {
   return (
-    <div className="map relative">
-      <img src={Mexico} alt="" className="opacity-40" />
+    <div className="map absolute">
+      <img src={Mexico} alt="" className="opacity-80" />
       {reefs.map(reef => (
         <Popover {...reef} />
       ))}
