@@ -13,7 +13,7 @@ const LevelMenu = ({ ...props }) => {
         buttonMode
         interactive
         pointerup={() => {
-          window.location.href = '/bunny-with-counter';
+          window.location.href = '/memory';
         }}
         position="100,100"
         style={style}
