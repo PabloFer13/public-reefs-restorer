@@ -7,7 +7,7 @@ import {
   Redirect,
 } from 'react-router-dom';
 import store from 'store';
-import Home from 'containers/Home';
+// import Home from 'containers/Home';
 import Level from 'containers/Level';
 // import Level1 from 'containers/Level1';
 // import Level2 from 'containers/Level2';
@@ -16,12 +16,13 @@ import Level from 'containers/Level';
 import BunnyWithCounter from 'games/BunnyWithCounter';
 import SlidePuzzle from 'games/SlidePuzzle';
 import Memory from 'games/Memory';
+import HideNSeek from 'games/HideNSeek'
 
 const App = () => (
   <Provider store={store}>
     <Router>
       <Switch>
-        <Route exact path="/" component={Home} />
+        <Route exact path="/" component={HideNSeek} />
         <Route exact path="/mar-caribe" component={Level} />
         <Route exact path="/golfo-de-mexico" component={Level} />
         <Route exact path="/oceano-pacifico" component={Level} />
