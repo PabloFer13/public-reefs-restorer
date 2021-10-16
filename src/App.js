@@ -13,10 +13,11 @@ import Level from 'containers/Level';
 // import Level2 from 'containers/Level2';
 // import Level3 from 'containers/Level3';
 
+import RotatingBunny from 'games/RotatingBunny';
 import BunnyWithCounter from 'games/BunnyWithCounter';
 import SlidePuzzle from 'games/SlidePuzzle';
 import Memory from 'games/Memory';
-import HideNSeek from 'games/HideNSeek'
+import HideNSeek from 'games/HideNSeek/index_tile';
 
 const App = () => (
   <Provider store={store}>
