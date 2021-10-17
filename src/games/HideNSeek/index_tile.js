@@ -13,16 +13,37 @@ import linterna from 'assets/images/hidenseek/linterna.png';
 import red from 'assets/images/hidenseek/red.png';
 import Bubbles from 'components/Bubbles';
 import RectangleBackground from 'components/Rectangle';
+import fishingSpritesheet from 'assets/spritesheets/fishing.png';
+import forageSpritesheet from 'assets/spritesheets/forage_all.png';
+import pezLeon from 'assets/images/hidenseek/pez_leon.png';
+import coralPilar from 'assets/images/hidenseek/coral_pilar.png';
 
-const tilemape = process.env.PUBLIC_URL + '/stages/map.tmx';
+const tilemape = process.env.PUBLIC_URL + '/stages/map_1.tmx';
 const screenWidth = window.innerWidth;
 const screenHeight = window.innerHeight;
-const blockers = { sand, rock, wood };
-const blockersType = ['sand', 'rock', 'wood'];
+
+const plasticBag = new PIXI.Texture.from(forageSpritesheet);
+const bagRact = new PIXI.Rectangle(96, 0, 16, 16);
+plasticBag.frame = bagRact;
+const bottle = new PIXI.Texture.from(forageSpritesheet);
+const bottleRact = new PIXI.Rectangle(144, 0, 16, 16);
+bottle.frame = bottleRact;
+const can = new PIXI.Texture.from(forageSpritesheet);
+const canRact = new PIXI.Rectangle(112, 0, 16, 16);
+can.frame = canRact;
+const blockers = { coralPilar, wood };
+const blockersType = ['coralPilar', 'wood'];
+
+const fish1 = new PIXI.Texture.from(fishingSpritesheet);
+const rect1 = new PIXI.Rectangle(16, 16, 16, 16);
+fish1.frame = rect1;
+const fish2 = new PIXI.Texture.from(fishingSpritesheet);
+const rect2 = new PIXI.Rectangle(16, 0, 16, 16);
+fish2.frame = rect2;
 const reloadedMockData = [
   {
     type: 'animal',
-    img: fish,
+    img: pezLeon,
     coords: [
       { x: 200, y: 200 },
       { x: 600, y: 100 },
@@ -33,7 +54,7 @@ const reloadedMockData = [
   },
   {
     type: 'night-animal',
-    img: gFish,
+    img: pezLeon,
     coords: [
       { x: 100, y: 100 },
       { x: 600, y: 100 },
@@ -218,11 +239,12 @@ const HideNSeek = () => {
             {reloadedMockData.map((it, ind) => (
               <Container>
                 <Sprite
-                  x={-15}
-                  y={-5 + 90 * ind}
+                  x={10}
+                  y={25 + 90 * ind}
                   width={100}
                   height={100}
-                  image={it.img}
+                  texture={new PIXI.Texture.from(it.img)}
+                  scale={0.25}
                 />
                 <Text
                   position={`25,${70 + 90 * ind}`}
@@ -244,11 +266,12 @@ const HideNSeek = () => {
             {boardObjects.map((it, ind) => {
               return (
                 <Sprite
-                  x={it.x}
-                  y={it.y}
+                  x={it.x + 400}
+                  y={it.y + 200}
                   width={100}
                   height={100}
                   texture={new PIXI.Texture.from(it.img)}
+                  scale={0.2}
                   interactive
                   buttonMode
                   click={() => {
@@ -262,11 +285,12 @@ const HideNSeek = () => {
             {blocks.map((it, ind) => {
               return (
                 <Sprite
-                  x={it.x}
-                  y={it.y}
+                  x={it.x + 400}
+                  y={it.y + 200}
                   width={100}
                   height={100}
                   texture={new PIXI.Texture.from(it.img)}
+                  scale={0.15}
                   interactive
                   buttonMode
                   click={() => {
