@@ -17,29 +17,15 @@ import fishingSpritesheet from 'assets/spritesheets/fishing.png';
 import forageSpritesheet from 'assets/spritesheets/forage_all.png';
 import pezLeon from 'assets/images/hidenseek/pez_leon.png';
 import coralPilar from 'assets/images/hidenseek/coral_pilar.png';
+import bgPixel from 'assets/images/hidenseek/map_1.png';
 
 const tilemape = process.env.PUBLIC_URL + '/stages/map_1.tmx';
 const screenWidth = window.innerWidth;
 const screenHeight = window.innerHeight;
 
-const plasticBag = new PIXI.Texture.from(forageSpritesheet);
-const bagRact = new PIXI.Rectangle(96, 0, 16, 16);
-plasticBag.frame = bagRact;
-const bottle = new PIXI.Texture.from(forageSpritesheet);
-const bottleRact = new PIXI.Rectangle(144, 0, 16, 16);
-bottle.frame = bottleRact;
-const can = new PIXI.Texture.from(forageSpritesheet);
-const canRact = new PIXI.Rectangle(112, 0, 16, 16);
-can.frame = canRact;
-const blockers = { coralPilar, wood };
-const blockersType = ['coralPilar', 'wood'];
+const blockers = { coralPilar };
+const blockersType = ['coralPilar'];
 
-const fish1 = new PIXI.Texture.from(fishingSpritesheet);
-const rect1 = new PIXI.Rectangle(16, 16, 16, 16);
-fish1.frame = rect1;
-const fish2 = new PIXI.Texture.from(fishingSpritesheet);
-const rect2 = new PIXI.Rectangle(16, 0, 16, 16);
-fish2.frame = rect2;
 const reloadedMockData = [
   {
     type: 'animal',
@@ -93,6 +79,8 @@ const HideNSeek = () => {
   const [found, setFound] = useState([]);
   const [timeLeft, setTimeLeft] = useState(-1);
   const [nightMode, setNightMode] = useState(false);
+  const [filters, setFilters] = useState([]);
+  const displacementRef = useRef(null);
 
   const toolBg = useCallback(g => {
     g.clear();
@@ -105,6 +93,13 @@ const HideNSeek = () => {
     g.lineStyle(3, 0xffd966, 1);
     g.beginFill(0x9a9a9a, 0.25);
     g.drawRoundedRect(-25, 0, 120, 200, 25);
+    g.endFill();
+  }, []);
+  const scoreBg = useCallback(g => {
+    g.clear();
+    g.lineStyle(2, 0x9a9a9a, 3);
+    g.beginFill(0x9a9a9a, 0.25);
+    g.drawRoundedRect(180, 16, 200, 50, 25);
     g.endFill();
   }, []);
 
@@ -167,6 +162,22 @@ const HideNSeek = () => {
     setBoardObjects([...newBoard]);
     setBlocks([...newBlocks]);
   }, [objs, nightMode]);
+  useEffect(() => {
+    const animate = () => {
+      displacementRef.current.x += 3;
+      displacementRef.current.y += 2;
+      requestAnimationFrame(animate);
+    };
+    const displacementFilter = new PIXI.filters.DisplacementFilter(
+      displacementRef.current
+    );
+    displacementRef.current.texture.baseTexture.wrapMode =
+      PIXI.WRAP_MODES.REPEAT;
+    displacementRef.current.scale.x = 10;
+    displacementRef.current.scale.y = 10;
+    setFilters(prev => [...prev, displacementFilter]);
+    animate();
+  }, []);
 
   const clickItem = i => {
     if (
@@ -230,98 +241,119 @@ const HideNSeek = () => {
         width={window.innerWidth}
         height={window.innerHeight}
         options={{ resizeTo: window }}>
-        <Tilemap
-          map={map}
+        <Sprite
+          texture={
+            new PIXI.Texture.from(bgPixel, {
+              scaleMode: PIXI.SCALE_MODES.LINEAR,
+            })
+          }
           width={window.innerWidth}
-          height={window.innerHeight}>
-          <Container position={[50, 0]}>
-            <Graphics x={0} y={10} draw={objBg} />
-            {reloadedMockData.map((it, ind) => (
+          height={window.innerHeight}
+          // filters={
+          //   // nightMode && !(currentTool === 'linterna') ? [lightmapFilter] : []
+          //   filters
+          // }
+        />
+        <Sprite
+          width={window.innerWidth}
+          height={window.innerHeight}
+          texture={PIXI.Texture.from(
+            'https://cdna.artstation.com/p/assets/images/images/009/070/412/large/alisha-bannister-sarno-alishabs-clouds.jpg?1516950864'
+          )}
+          ref={displacementRef}
+        />
+        <Container position={[window.innerWidth / 2 + 500, 20]}>
+          <Graphics x={0} y={10} draw={scoreBg} />
+          <Text position={[220, 35]} text={`Score: 100`} />
+        </Container>
+        <Container position={[50, 0]}>
+          <Graphics x={0} y={10} draw={objBg} />
+          {reloadedMockData.map((it, ind) => (
+            <Container>
+              <Sprite
+                x={-60}
+                y={90 * ind}
+                width={100}
+                height={100}
+                texture={new PIXI.Texture.from(it.img)}
+                scale={0.2}
+              />
+              <Text
+                position={`25,${70 + 90 * ind}`}
+                style={{ fontSize: 18 }}
+                text={`${found[ind]}/${it.coords.length}`}
+              />
+            </Container>
+          ))}
+        </Container>
+        <Container position={[window.innerWidth / 2, 25]}>
+          <RectangleBackground />
+          <Text
+            position={[0, 30]}
+            style={{ fontSize: 30, fill: timeLeft > 30 ? 'black' : 'white' }}
+            text={`${timeLeft}`}
+          />
+        </Container>
+        <Container>
+          {boardObjects.map((it, ind) => {
+            return (
+              <Sprite
+                x={it.x + 400}
+                y={it.y + 200}
+                width={100}
+                height={100}
+                texture={new PIXI.Texture.from(it.img)}
+                scale={0.2}
+                interactive
+                buttonMode
+                click={() => {
+                  clickItem(it.originalInd);
+                }}
+              />
+            );
+          })}
+        </Container>
+        <Container>
+          {blocks.map((it, ind) => {
+            return (
+              <Sprite
+                x={it.x + 450}
+                y={it.y + 200}
+                width={100}
+                height={100}
+                texture={new PIXI.Texture.from(coralPilar)}
+                scale={0.15}
+                interactive
+                buttonMode
+                click={() => {
+                  clickBlock(ind);
+                }}
+              />
+            );
+          })}
+        </Container>
+        <Container position={[screenWidth / 2, 0]}>
+          {tools.map(it => {
+            return (
               <Container>
+                <Graphics x={it.x} y={it.y} draw={toolBg} />
                 <Sprite
-                  x={10}
-                  y={25 + 90 * ind}
+                  interactive
+                  buttonMode
+                  x={it.x}
+                  y={it.y}
                   width={100}
                   height={100}
                   texture={new PIXI.Texture.from(it.img)}
-                  scale={0.25}
-                />
-                <Text
-                  position={`25,${70 + 90 * ind}`}
-                  style={{ fontSize: 18 }}
-                  text={`${found[ind]}/${it.coords.length}`}
+                  click={() => {
+                    clickTool(it.type);
+                  }}
                 />
               </Container>
-            ))}
-          </Container>
-          <Container position={[window.innerWidth / 2, 25]}>
-            <RectangleBackground />
-            <Text
-              position={[0, 30]}
-              style={{ fontSize: 30, fill: timeLeft > 30 ? 'black' : 'white' }}
-              text={`${timeLeft}`}
-            />
-          </Container>
-          <Container>
-            {boardObjects.map((it, ind) => {
-              return (
-                <Sprite
-                  x={it.x + 400}
-                  y={it.y + 200}
-                  width={100}
-                  height={100}
-                  texture={new PIXI.Texture.from(it.img)}
-                  scale={0.2}
-                  interactive
-                  buttonMode
-                  click={() => {
-                    clickItem(it.originalInd);
-                  }}
-                />
-              );
-            })}
-          </Container>
-          <Container>
-            {blocks.map((it, ind) => {
-              return (
-                <Sprite
-                  x={it.x + 400}
-                  y={it.y + 200}
-                  width={100}
-                  height={100}
-                  texture={new PIXI.Texture.from(it.img)}
-                  scale={0.15}
-                  interactive
-                  buttonMode
-                  click={() => {
-                    clickBlock(ind);
-                  }}
-                />
-              );
-            })}
-          </Container>
-          <Container position={[screenWidth / 2, 0]}>
-            {tools.map(it => {
-              return (
-                <Container>
-                  <Graphics x={it.x} y={it.y} draw={toolBg} />
-                  <Sprite
-                    interactive
-                    buttonMode
-                    x={it.x}
-                    y={it.y}
-                    width={100}
-                    height={100}
-                    texture={new PIXI.Texture.from(it.img)}
-                    click={() => {
-                      clickTool(it.type);
-                    }}
-                  />
-                </Container>
-              );
-            })}
-          </Container>
-        </Tilemap>
+            );
+          })}
+        </Container>
+        {/* </Tilemap> */}
       </Stage>
       <Bubbles />
     </>
