@@ -249,10 +249,7 @@ const HideNSeek = () => {
           }
           width={window.innerWidth}
           height={window.innerHeight}
-          // filters={
-          //   // nightMode && !(currentTool === 'linterna') ? [lightmapFilter] : []
-          //   filters
-          // }
+          filters={filters}
         />
         <Sprite
           width={window.innerWidth}
@@ -294,43 +291,45 @@ const HideNSeek = () => {
             text={`${timeLeft}`}
           />
         </Container>
-        <Container>
-          {boardObjects.map((it, ind) => {
-            return (
-              <Sprite
-                x={it.x + 400}
-                y={it.y + 200}
-                width={100}
-                height={100}
-                texture={new PIXI.Texture.from(it.img)}
-                scale={0.2}
-                interactive
-                buttonMode
-                click={() => {
-                  clickItem(it.originalInd);
-                }}
-              />
-            );
-          })}
-        </Container>
-        <Container>
-          {blocks.map((it, ind) => {
-            return (
-              <Sprite
-                x={it.x + 450}
-                y={it.y + 200}
-                width={100}
-                height={100}
-                texture={new PIXI.Texture.from(coralPilar)}
-                scale={0.15}
-                interactive
-                buttonMode
-                click={() => {
-                  clickBlock(ind);
-                }}
-              />
-            );
-          })}
+        <Container filters={filters}>
+          <Container>
+            {boardObjects.map((it, ind) => {
+              return (
+                <Sprite
+                  x={it.x + 400}
+                  y={it.y + 200}
+                  width={100}
+                  height={100}
+                  texture={new PIXI.Texture.from(it.img)}
+                  scale={0.2}
+                  interactive
+                  buttonMode
+                  click={() => {
+                    clickItem(it.originalInd);
+                  }}
+                />
+              );
+            })}
+          </Container>
+          <Container>
+            {blocks.map((it, ind) => {
+              return (
+                <Sprite
+                  x={it.x + 450}
+                  y={it.y + 200}
+                  width={100}
+                  height={100}
+                  texture={new PIXI.Texture.from(coralPilar)}
+                  scale={0.15}
+                  interactive
+                  buttonMode
+                  click={() => {
+                    clickBlock(ind);
+                  }}
+                />
+              );
+            })}
+          </Container>
         </Container>
         <Container position={[screenWidth / 2, 0]}>
           {tools.map(it => {
@@ -340,10 +339,11 @@ const HideNSeek = () => {
                 <Sprite
                   interactive
                   buttonMode
-                  x={it.x}
-                  y={it.y}
+                  x={it.x + 15}
+                  y={it.y + 15}
                   width={100}
                   height={100}
+                  scale={0.12}
                   texture={new PIXI.Texture.from(it.img)}
                   click={() => {
                     clickTool(it.type);
