@@ -1,13 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Sprite, Stage, Text, Container, Graphics } from '@inlet/react-pixi';
-import { Texture } from '@pixi/core';
+import { ColorOverlayFilter } from '@pixi/filter-color-overlay';
 import * as PIXI from 'pixi.js';
 import { Tilemap, useTilemapLoader } from 'react-pixi-tilemap';
-import sand from 'assets/images/sand.png';
-import rock from 'assets/images/rock.png';
-import wood from 'assets/images/wood.png';
-import fish from 'assets/images/fish.gif';
-import gFish from 'assets/images/green-fish.gif';
 import guantes from 'assets/images/hidenseek/guantes.png';
 import linterna from 'assets/images/hidenseek/linterna.png';
 import red from 'assets/images/hidenseek/red.png';
@@ -175,7 +170,11 @@ const HideNSeek = () => {
       PIXI.WRAP_MODES.REPEAT;
     displacementRef.current.scale.x = 10;
     displacementRef.current.scale.y = 10;
-    setFilters(prev => [...prev, displacementFilter]);
+    setFilters(prev => [
+      ...prev,
+      displacementFilter,
+      new ColorOverlayFilter(0x120455, 0.7),
+    ]);
     animate();
   }, []);
 

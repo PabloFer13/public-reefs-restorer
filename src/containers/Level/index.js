@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Sprite, Stage, Container } from '@inlet/react-pixi';
+import { ColorOverlayFilter } from '@pixi/filter-color-overlay';
 import * as PIXI from 'pixi.js';
 // import bgWater from 'assets/images/level/level.png';
 // import bgWater from 'assets/images/level/level-filter1.jpg';
@@ -37,7 +38,11 @@ const Level = () => {
       PIXI.WRAP_MODES.REPEAT;
     displacementRef.current.scale.x = 10;
     displacementRef.current.scale.y = 10;
-    setFilters(prev => [...prev, displacementFilter]);
+    setFilters(prev => [
+      ...prev,
+      displacementFilter,
+      new ColorOverlayFilter(0x120455, 0.7),
+    ]);
     animate();
   }, []);
 
