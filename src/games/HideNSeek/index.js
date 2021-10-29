@@ -24,35 +24,6 @@ const OPTIONS = {
 const blockers = { sand, rock, wood };
 const blockersType = ['sand', 'rock', 'wood'];
 
-const mockData = [
-  { img: fish, x: 100, y: 100, type: 'object', found: false },
-  { img: fish, x: 600, y: 100, type: 'object', found: false },
-  {
-    img: fish,
-    x: 100,
-    y: 450,
-    type: 'object',
-    found: false,
-    over: { type: 'sand', found: false },
-  },
-  {
-    img: fish,
-    x: 600,
-    y: 450,
-    type: 'object',
-    found: false,
-    over: { type: 'rock', found: false },
-  },
-  {
-    img: fish,
-    x: 350,
-    y: 275,
-    type: 'object',
-    found: false,
-    over: { type: 'wood', found: false },
-  },
-];
-
 const reloadedMockData = [
   {
     type: 'animal',
@@ -84,10 +55,11 @@ const tools = [
   { x: 450, y: 500, img: red, type: 'red' },
 ];
 
-const lightmapFilter = new SimpleLightmapFilter(
-  new PIXI.Texture.from(lightmap),
-  [9, 5, 75, 0.005]
-);
+// const decorations = [
+//   { type: '', img: '', coords: [] },
+//   { type: '', img: '', coords: [] },
+//   { type: '', img: '', coords: [] },
+// ];
 
 const getRandomNumber = () => {
   return Math.floor(Math.random() * 10) + 1;
