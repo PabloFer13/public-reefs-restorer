@@ -1669,6 +1669,11 @@
   dependencies:
     "@pixi/core" "6.0.4"
 
+"@pixi/filter-color-overlay@^4.1.5":
+  version "4.1.5"
+  resolved "https://registry.yarnpkg.com/@pixi/filter-color-overlay/-/filter-color-overlay-4.1.5.tgz#db9bc841228c41f469267d09e566006496dfe3f1"
+  integrity sha512-hT29sEBkcEzRdNFKlzHvzOJ0nJh2XKuuyiQkgr9IwA6x6GZ5UCX5ybJl7cfr/NKpujvxGIXknQNdPU7MWonJOQ==
+
 "@pixi/filter-displacement@6.0.4":
   version "6.0.4"
   resolved "https://registry.yarnpkg.com/@pixi/filter-displacement/-/filter-displacement-6.0.4.tgz#eaa599f8753533864a4a722a72f3e929f47c2a02"
