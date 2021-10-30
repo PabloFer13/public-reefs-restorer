@@ -7,7 +7,7 @@ import {
   Redirect,
 } from 'react-router-dom';
 import store from 'store';
-// import Home from 'containers/Home';
+import Home from 'containers/Home/index_pixi';
 import Level from 'containers/Level';
 // import Level1 from 'containers/Level1';
 // import Level2 from 'containers/Level2';
@@ -23,7 +23,7 @@ const App = () => (
   <Provider store={store}>
     <Router>
       <Switch>
-        <Route exact path="/" component={Level} />
+        <Route exact path="/" component={Home} />
         <Route exact path="/mar-caribe" component={Level} />
         <Route exact path="/golfo-de-mexico" component={Level} />
         <Route exact path="/oceano-pacifico" component={Level} />

@@ -1,5 +1,12 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Sprite, Stage, Text, Container, Graphics } from '@inlet/react-pixi';
+import {
+  Sprite,
+  Stage,
+  Text,
+  Container,
+  Graphics,
+  withFilters,
+} from '@inlet/react-pixi';
 import { ColorOverlayFilter } from '@pixi/filter-color-overlay';
 import * as PIXI from 'pixi.js';
 import { Tilemap, useTilemapLoader } from 'react-pixi-tilemap';
@@ -173,7 +180,7 @@ const HideNSeek = () => {
     setFilters(prev => [
       ...prev,
       displacementFilter,
-      new ColorOverlayFilter(0x120455, 0.7),
+      // new ColorOverlayFilter(0x120455, 0.7),
     ]);
     animate();
   }, []);
@@ -234,22 +241,28 @@ const HideNSeek = () => {
     }
   };
 
+  const Filters = withFilters(Container, {
+    colorOverlay: ColorOverlayFilter,
+  });
+
   return (
     <>
       <Stage
         width={window.innerWidth}
         height={window.innerHeight}
         options={{ resizeTo: window }}>
-        <Sprite
-          texture={
-            new PIXI.Texture.from(bgPixel, {
-              scaleMode: PIXI.SCALE_MODES.LINEAR,
-            })
-          }
-          width={window.innerWidth}
-          height={window.innerHeight}
-          filters={filters}
-        />
+        <Filters colorOverlay={{ color: 0x120455, alpha: 0.7 }}>
+          <Sprite
+            texture={
+              new PIXI.Texture.from(bgPixel, {
+                scaleMode: PIXI.SCALE_MODES.LINEAR,
+              })
+            }
+            width={window.innerWidth}
+            height={window.innerHeight}
+            filters={filters}
+          />
+        </Filters>
         <Sprite
           width={window.innerWidth}
           height={window.innerHeight}
@@ -291,44 +304,46 @@ const HideNSeek = () => {
           />
         </Container>
         <Container filters={filters}>
-          <Container>
-            {boardObjects.map((it, ind) => {
-              return (
-                <Sprite
-                  x={it.x + 400}
-                  y={it.y + 200}
-                  width={100}
-                  height={100}
-                  texture={new PIXI.Texture.from(it.img)}
-                  scale={0.2}
-                  interactive
-                  buttonMode
-                  click={() => {
-                    clickItem(it.originalInd);
-                  }}
-                />
-              );
-            })}
-          </Container>
-          <Container>
-            {blocks.map((it, ind) => {
-              return (
-                <Sprite
-                  x={it.x + 450}
-                  y={it.y + 200}
-                  width={100}
-                  height={100}
-                  texture={new PIXI.Texture.from(coralPilar)}
-                  scale={0.15}
-                  interactive
-                  buttonMode
-                  click={() => {
-                    clickBlock(ind);
-                  }}
-                />
-              );
-            })}
-          </Container>
+          <Filters colorOverlay={{ color: 0x120455, alpha: 0.4 }}>
+            <Container>
+              {boardObjects.map((it, ind) => {
+                return (
+                  <Sprite
+                    x={it.x + 400}
+                    y={it.y + 200}
+                    width={100}
+                    height={100}
+                    texture={new PIXI.Texture.from(it.img)}
+                    scale={0.2}
+                    interactive
+                    buttonMode
+                    click={() => {
+                      clickItem(it.originalInd);
+                    }}
+                  />
+                );
+              })}
+            </Container>
+            <Container>
+              {blocks.map((it, ind) => {
+                return (
+                  <Sprite
+                    x={it.x + 450}
+                    y={it.y + 200}
+                    width={100}
+                    height={100}
+                    texture={new PIXI.Texture.from(coralPilar)}
+                    scale={0.15}
+                    interactive
+                    buttonMode
+                    click={() => {
+                      clickBlock(ind);
+                    }}
+                  />
+                );
+              })}
+            </Container>
+          </Filters>
         </Container>
         <Container position={[screenWidth / 2, 0]}>
           {tools.map(it => {

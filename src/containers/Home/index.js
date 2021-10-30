@@ -1,4 +1,5 @@
-import { useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { Sprite, Stage, Container } from '@inlet/react-pixi';
 import { Howl } from 'howler';
 import BgSound from 'assets/music/menu.mp3';
 import Fish from 'assets/images/fish.gif';
