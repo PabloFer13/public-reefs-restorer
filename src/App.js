@@ -23,7 +23,7 @@ const App = () => (
   <Provider store={store}>
     <Router>
       <Switch>
-        <Route exact path="/" component={Level} />
+        <Route exact path="/" component={HideNSeek} />
         <Route exact path="/mar-caribe" component={Level} />
         <Route exact path="/golfo-de-mexico" component={Level} />
         <Route exact path="/oceano-pacifico" component={Level} />
