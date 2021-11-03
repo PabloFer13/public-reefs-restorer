@@ -17,13 +17,14 @@ import RotatingBunny from 'games/RotatingBunny';
 import BunnyWithCounter from 'games/BunnyWithCounter';
 import SlidePuzzle from 'games/SlidePuzzle';
 import Memory from 'games/Memory';
+import Shooter from 'games/Shooter';
 import HideNSeek from 'games/HideNSeek/index_tile';
 
 const App = () => (
   <Provider store={store}>
     <Router>
       <Switch>
-        <Route exact path="/" component={Home} />
+        <Route exact path="/" component={Shooter} />
         <Route exact path="/mar-caribe" component={Level} />
         <Route exact path="/golfo-de-mexico" component={Level} />
         <Route exact path="/oceano-pacifico" component={Level} />
