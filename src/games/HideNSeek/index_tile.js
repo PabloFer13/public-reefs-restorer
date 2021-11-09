@@ -9,6 +9,10 @@ import {
 } from '@inlet/react-pixi';
 import { ColorOverlayFilter } from '@pixi/filter-color-overlay';
 import * as PIXI from 'pixi.js';
+import { Howl } from 'howler';
+import SelectSound from 'assets/music/select.wav';
+import GameOverSound from 'assets/music/game-over.wav';
+import LightSwitch from 'assets/music/light-switch.wav';
 import guantes from 'assets/images/hidenseek/guantes.png';
 import linterna from 'assets/images/hidenseek/linterna.png';
 import red from 'assets/images/hidenseek/red.png';
@@ -162,6 +166,21 @@ const HideNSeek = () => {
   const [nightMode, setNightMode] = useState(false);
   const [filters, setFilters] = useState([]);
   const displacementRef = useRef(null);
+  const selectS = new Howl({
+    src: SelectSound,
+    autoplay: false,
+    loop: false,
+  });
+  const gameOver = new Howl({
+    src: GameOverSound,
+    autoplay: false,
+    loop: false,
+  });
+  const lightSwitchS = new Howl({
+    src: LightSwitch,
+    autoplay: false,
+    loop: false,
+  });
   const toolBg = useCallback(g => {
     g.clear();
     g.lineStyle(3, 0xffd966, 1);
@@ -330,6 +349,13 @@ const HideNSeek = () => {
     setWon(haveWon);
   }, [objs]);
 
+  useEffect(() => {
+    timeLeft === 0 && gameOver.play();
+    return () => {
+      gameOver.stop();
+    };
+  }, [timeLeft]);
+
   const clickItem = i => {
     if (timeLeft > 0) {
       if (
@@ -389,11 +415,13 @@ const HideNSeek = () => {
       if (currentTool === type && currentTool !== 'linterna') {
         setCurrentTool('');
       } else if (currentTool !== 'linterna' || !nightMode) {
+        selectS.play();
         setCurrentTool(type);
       }
 
       if (type === 'linterna' && currentTool !== 'linterna') {
         const [dispFilter] = filters;
+        lightSwitchS.play();
         setFilters([dispFilter, new ColorOverlayFilter(0x120455, 0.4)]);
         setTimeout(() => {
           setCurrentTool('');
