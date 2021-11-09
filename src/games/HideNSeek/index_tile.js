@@ -25,6 +25,10 @@ import brownRock from 'assets/images/hidenseek/brownRock.png';
 import purpleRock from 'assets/images/hidenseek/purpleRock.png';
 import sargazo from 'assets/images/hidenseek/sargazoPixel.png';
 import tortuga from 'assets/images/species/tortugaCarey.png';
+import pezLoro from 'assets/images/species/pezLoro.png';
+// import ajolote from 'assets/images/species/ajolote.png';
+import pargo from 'assets/images/species/pargo.png';
+import boquinete from 'assets/images/species/boquinete.png';
 import redReef from 'assets/images/reefFlora/coralRojo.png';
 import coralRojo from 'assets/images/reefFlora/coralRojo2.png';
 
@@ -39,13 +43,40 @@ const reloadedMockData = [
     type: 'animal',
     img: tortuga,
     amount: 5,
+    name: 'tortuga',
+  },
+  // {
+  //   type: 'animal',
+  //   img: ajolote,
+  //   amount: 5,
+  //   name: 'ajolote'
+  // },
+  {
+    type: 'animal',
+    img: boquinete,
+    amount: 5,
+    name: 'boquinete',
+  },
+  {
+    type: 'night-animal',
+    img: pargo,
+    amount: 5,
+    name: 'pargo',
+  },
+  {
+    type: 'night-animal',
+    img: pezLoro,
+    amount: 5,
+    name: 'pezLoro',
   },
   {
     type: 'night-animal',
     img: pezLeon,
     amount: 5,
+    name: 'pezLeon',
   },
 ];
+
 const tools = [
   { x: 0, y: screenHeight - 200, img: guantes, type: 'guantes' },
   { x: 150, y: screenHeight - 200, img: linterna, type: 'linterna' },
@@ -95,6 +126,10 @@ const decorations = [
     ],
   },
 ];
+
+function getRandomArbitrary(min, max) {
+  return Math.random() * (max - min) + min;
+}
 
 const getRandomNumber = () => {
   return Math.floor(Math.random() * 100) + 1;
@@ -204,15 +239,17 @@ const HideNSeek = () => {
 
   useEffect(() => {
     const newObjs = reloadedMockData.reduce((acc, it) => {
-      const { type, img, amount } = it;
+      const { type, img, amount, name } = it;
       const newItems = [];
       for (let i = 0; i < amount; i += 1) {
         const coords = getRandomCoords();
         newItems.push({
           type,
           img,
+          name,
           found: false,
           ...coords,
+          rotation: getRandomArbitrary(-0.7, 0.7),
           over:
             coords.y >= 350 ? getRandomBlock('bottom') : getRandomBlock('top'),
         });
@@ -233,14 +270,14 @@ const HideNSeek = () => {
     setObjs([...newObjs]);
     setFound([...newFounds]);
     setBoardDecorations([...newDecorations]);
-    setTimeLeft(60);
+    setTimeLeft(120);
   }, []);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
       setTimeLeft(prevTime => {
-        if (prevTime === 31) {
-          // setNightMode(true);
+        if (prevTime === 61) {
+          setNightMode(true);
         }
 
         setObjs(prevObjs => {
@@ -372,7 +409,7 @@ const HideNSeek = () => {
         });
 
         const foundsInd = reloadedMockData.findIndex(
-          it => it.type === objs[i].type
+          it => it.name === objs[i].name
         );
         const newFounds = [...found];
         newFounds[foundsInd] = newFounds[foundsInd] + 1;
@@ -484,6 +521,7 @@ const HideNSeek = () => {
                   height={100}
                   texture={new PIXI.Texture.from(it.img)}
                   scale={0.15}
+                  rotation={it.rotation}
                   interactive
                   buttonMode
                   click={() => {
@@ -540,7 +578,7 @@ const HideNSeek = () => {
             ) : null;
           })}
         </Container>
-        <Container position={[window.innerWidth / 2 + 500, 20]}>
+        <Container position={[window.innerWidth / 2 + 250, 20]}>
           <Graphics x={0} y={10} draw={scoreBg} />
           <Text position={[220, 35]} text={`Score: ${score}`} />
         </Container>
