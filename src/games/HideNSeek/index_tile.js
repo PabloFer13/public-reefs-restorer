@@ -11,8 +11,11 @@ import { ColorOverlayFilter } from '@pixi/filter-color-overlay';
 import * as PIXI from 'pixi.js';
 import { Howl } from 'howler';
 import SelectSound from 'assets/music/select.wav';
+import TargetS from 'assets/music/target.wav';
+import BlockerS from 'assets/music/blocker.wav';
 import GameOverSound from 'assets/music/game-over.wav';
 import LightSwitch from 'assets/music/light-switch.wav';
+import BgSound from 'assets/music/bg-sea-1.mp3';
 import guantes from 'assets/images/hidenseek/guantes.png';
 import linterna from 'assets/images/hidenseek/linterna.png';
 import red from 'assets/images/hidenseek/red.png';
@@ -216,6 +219,16 @@ const HideNSeek = () => {
     autoplay: false,
     loop: false,
   });
+  const blockerSound = new Howl({
+    src: BlockerS,
+    autoplay: false,
+    loop: false,
+  });
+  const targetSound = new Howl({
+    src: TargetS,
+    autoplay: false,
+    loop: false,
+  });
   const toolBg = useCallback(g => {
     g.clear();
     g.lineStyle(3, 0xffd966, 1);
@@ -235,6 +248,18 @@ const HideNSeek = () => {
     g.beginFill(0x9a9a9a, 0.25);
     g.drawRoundedRect(180, 16, 200, 50, 25);
     g.endFill();
+  }, []);
+
+  useEffect(() => {
+    const bgMusic = new Howl({
+      src: BgSound,
+      autoplay: false,
+      loop: true,
+    });
+    bgMusic.play();
+    return () => {
+      bgMusic.stop();
+    };
   }, []);
 
   useEffect(() => {
@@ -417,7 +442,7 @@ const HideNSeek = () => {
         const bonus = lastScore - timeLeft < 6 && lastScore > 0;
         const bonusPoints = bonus ? combo * 100 : 0;
         const sumPoints = 100 + bonusPoints;
-
+        targetSound.play();
         setFound([...newFounds]);
         setObjs([...newObjs]);
         setScore(score + sumPoints);
@@ -442,6 +467,7 @@ const HideNSeek = () => {
           return { ...newItem };
         });
 
+        blockerSound.play();
         setObjs(newObjs);
       }
     }
