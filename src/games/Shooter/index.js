@@ -16,6 +16,38 @@ const screenHeight = window.innerHeight;
 
 const mockArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
+function Fish({ posX, posY, ...props }) {
+  // console.log(props)
+  return <Sprite x={posX} y={posY} texture={fishTexture} scale={0.2} />;
+}
+
+function Net({ posX, posY, ...props }) {
+  // console.log(props)
+  return (
+    <Sprite
+      x={posX}
+      y={posY}
+      width={30}
+      height={30}
+      texture={netTexture}
+      scale={0.2}
+    />
+  );
+}
+
+function PlayerShip({ posX, posY, ...props }) {
+  // console.log(props)
+  return (
+    <Sprite
+      x={posX}
+      y={posY}
+      scale={0.4}
+      texture={submarineTexture}
+      rotation={5 - 0.1}
+    />
+  );
+}
+
 function Shooter() {
   const [fishes, setFishes] = useState(() => {
     const aux = mockArr.map(() => ({
@@ -32,6 +64,7 @@ function Shooter() {
 
   const [filters, setFilters] = useState([]);
   const displacementRef = useRef(null);
+  const reqRef = useRef(null);
 
   const scoreBg = useCallback(g => {
     g.clear();
@@ -75,7 +108,7 @@ function Shooter() {
     const animate = () => {
       displacementRef.current.x += 3;
       displacementRef.current.y += 2;
-      requestAnimationFrame(animate);
+      reqRef.current = requestAnimationFrame(animate);
     };
     const displacementFilter = new PIXI.filters.DisplacementFilter(
       displacementRef.current
@@ -85,7 +118,9 @@ function Shooter() {
     displacementRef.current.scale.x = 10;
     displacementRef.current.scale.y = 10;
     setFilters(prev => [...prev, displacementFilter]);
-    animate();
+    reqRef.current = requestAnimationFrame(animate);
+
+    return () => cancelAnimationFrame(reqRef.current);
   }, []);
 
   const shoot = () => {
@@ -148,38 +183,6 @@ function Shooter() {
       </Stage>
       <Bubbles />
     </div>
-  );
-}
-
-function Fish({ posX, posY, ...props }) {
-  // console.log(props)
-  return <Sprite x={posX} y={posY} texture={fishTexture} scale={0.2} />;
-}
-
-function Net({ posX, posY, ...props }) {
-  // console.log(props)
-  return (
-    <Sprite
-      x={posX}
-      y={posY}
-      width={30}
-      height={30}
-      texture={netTexture}
-      scale={0.2}
-    />
-  );
-}
-
-function PlayerShip({ posX, posY, ...props }) {
-  // console.log(props)
-  return (
-    <Sprite
-      x={posX}
-      y={posY}
-      scale={0.4}
-      texture={submarineTexture}
-      rotation={5 - 0.1}
-    />
   );
 }
 

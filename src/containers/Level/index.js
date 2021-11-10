@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-
+import { useHistory } from 'react-router-dom'
 import { Sprite, Stage, Container, withFilters } from '@inlet/react-pixi';
 import { ColorOverlayFilter } from '@pixi/filter-color-overlay';
 import * as PIXI from 'pixi.js';
@@ -25,14 +25,16 @@ const screenWidth = window.innerWidth;
 const screenHeight = window.innerHeight;
 
 const Level = () => {
+  const history = useHistory();
   const [filters, setFilters] = useState([]);
   const displacementRef = useRef(null);
+  const reqRef = useRef(null);
 
   useEffect(() => {
     const animate = () => {
       displacementRef.current.x += 3;
       displacementRef.current.y += 2;
-      requestAnimationFrame(animate);
+      reqRef.current = requestAnimationFrame(animate);
     };
     const displacementFilter = new PIXI.filters.DisplacementFilter(
       displacementRef.current
@@ -46,8 +48,31 @@ const Level = () => {
       displacementFilter,
       // new ColorOverlayFilter(0x120455, 0.7),
     ]);
-    animate();
+    reqRef.current = requestAnimationFrame(animate);
+
+    return () => cancelAnimationFrame(reqRef.current);
   }, []);
+
+  // useEffect(() => {
+  //   const animate = () => {
+  //     displacementRef.current.x += 3;
+  //     displacementRef.current.y += 2;
+  //     requestAnimationFrame(animate);
+  //   };
+  //   const displacementFilter = new PIXI.filters.DisplacementFilter(
+  //     displacementRef.current
+  //   );
+  //   displacementRef.current.texture.baseTexture.wrapMode =
+  //     PIXI.WRAP_MODES.REPEAT;
+  //   displacementRef.current.scale.x = 10;
+  //   displacementRef.current.scale.y = 10;
+  //   setFilters(prev => [
+  //     ...prev,
+  //     displacementFilter,
+  //     // new ColorOverlayFilter(0x120455, 0.7),
+  //   ]);
+  //   animate();
+  // }, []);
 
   const reefs = [
     {
@@ -55,30 +80,35 @@ const Level = () => {
       y: screenHeight / 2 - 10,
       scale: 0.7,
       texture: new PIXI.Texture.from(purple),
+      goTo: '/shooter'
     },
     {
       x: screenWidth / 2 - 320,
       y: screenHeight / 2 + 50,
       scale: 0.75,
       texture: new PIXI.Texture.from(pink),
+      goTo: '/shooter'
     },
     {
       x: screenWidth / 2 + 610,
       y: screenHeight / 2 + 40,
       scale: 0.5,
       texture: new PIXI.Texture.from(green),
+      goTo: '/hidenseek'
     },
     {
       x: screenWidth / 2 + 450,
       y: screenHeight / 2 + 90,
       scale: 0.75,
       texture: new PIXI.Texture.from(lightOrange),
+      goTo: '/hidenseek'
     },
     {
       x: -60,
       y: screenHeight / 2 + 50,
       scale: 0.75,
       texture: new PIXI.Texture.from(red),
+      goTo: '/hidenseek'
     },
   ];
 
@@ -129,6 +159,7 @@ const Level = () => {
                 texture={it.texture}
                 interactive
                 buttonMode
+                click={() => history.push(it.goTo)}
               />
             ))}
           </Filters>

@@ -5,7 +5,7 @@ import {
   Text,
   Container,
   Graphics,
-  withFilters,
+  // withFilters,
 } from '@inlet/react-pixi';
 import { ColorOverlayFilter } from '@pixi/filter-color-overlay';
 import * as PIXI from 'pixi.js';
@@ -204,6 +204,7 @@ const HideNSeek = () => {
   const [nightMode, setNightMode] = useState(false);
   const [filters, setFilters] = useState([]);
   const displacementRef = useRef(null);
+  const reqRef = useRef(null);
   const selectS = new Howl({
     src: SelectSound,
     autoplay: false,
@@ -302,6 +303,7 @@ const HideNSeek = () => {
     const intervalId = setInterval(() => {
       setTimeLeft(prevTime => {
         if (prevTime === 61) {
+          console.log('Entra!')
           setNightMode(true);
         }
 
@@ -335,6 +337,10 @@ const HideNSeek = () => {
 
           return [...newObjs];
         });
+
+        // if(prevTime === 0){
+        //   gameOver.play();
+        // }
 
         return prevTime > 0 ? prevTime - 1 : prevTime;
       });
@@ -381,7 +387,7 @@ const HideNSeek = () => {
     const animate = () => {
       displacementRef.current.x += 3;
       displacementRef.current.y += 2;
-      requestAnimationFrame(animate);
+      reqRef.current = requestAnimationFrame(animate);
     };
     const displacementFilter = new PIXI.filters.DisplacementFilter(
       displacementRef.current
@@ -396,7 +402,9 @@ const HideNSeek = () => {
 
       return [...newFilters];
     });
-    animate();
+    reqRef.current = requestAnimationFrame(animate);
+
+    return () => cancelAnimationFrame(reqRef.current);
   }, [nightMode]);
 
   useEffect(() => {
@@ -494,9 +502,9 @@ const HideNSeek = () => {
     }
   };
 
-  const Filters = withFilters(Container, {
-    colorOverlay: ColorOverlayFilter,
-  });
+  // const Filters = withFilters(Container, {
+  //   colorOverlay: ColorOverlayFilter,
+  // });
 
   return (
     <>
@@ -504,7 +512,8 @@ const HideNSeek = () => {
         width={window.innerWidth}
         height={window.innerHeight}
         options={{ resizeTo: window }}>
-        <Filters colorOverlay={{ color: 0x120455, alpha: 0.7 }}>
+        <Container filters={filters}>
+        {/* <Filters colorOverlay={{ color: 0x120455, alpha: 0.7 }}> */}
           <Sprite
             texture={
               new PIXI.Texture.from(bgPixel, {
@@ -515,7 +524,8 @@ const HideNSeek = () => {
             height={window.innerHeight}
             filters={filters}
           />
-        </Filters>
+        {/* </Filters> */}
+        </Container>
         <Sprite
           width={window.innerWidth}
           height={window.innerHeight}
