@@ -53,27 +53,6 @@ const Level = () => {
     return () => cancelAnimationFrame(reqRef.current);
   }, []);
 
-  // useEffect(() => {
-  //   const animate = () => {
-  //     displacementRef.current.x += 3;
-  //     displacementRef.current.y += 2;
-  //     requestAnimationFrame(animate);
-  //   };
-  //   const displacementFilter = new PIXI.filters.DisplacementFilter(
-  //     displacementRef.current
-  //   );
-  //   displacementRef.current.texture.baseTexture.wrapMode =
-  //     PIXI.WRAP_MODES.REPEAT;
-  //   displacementRef.current.scale.x = 10;
-  //   displacementRef.current.scale.y = 10;
-  //   setFilters(prev => [
-  //     ...prev,
-  //     displacementFilter,
-  //     // new ColorOverlayFilter(0x120455, 0.7),
-  //   ]);
-  //   animate();
-  // }, []);
-
   const reefs = [
     {
       x: screenWidth / 2 - 480,

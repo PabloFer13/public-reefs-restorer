@@ -3,13 +3,15 @@ import { Sprite, Stage, Container, Text, Graphics } from '@inlet/react-pixi';
 import * as PIXI from 'pixi.js';
 import fishPic from 'assets/images/shooter/pezLeon_pixel.png';
 import netPic from 'assets/images/shooter/red_pixel.png';
-import submarinePic from 'assets/images/shooter/submarine_pixel.png';
+import boy from 'assets/images/shooter/boy.png';
+import girl from 'assets/images/shooter/girl.png';
 import bgWater from 'assets/images/shooter/sea_pixel.png';
 import Bubbles from 'components/Bubbles';
 
 const fishTexture = new PIXI.Texture.from(fishPic);
 const netTexture = new PIXI.Texture.from(netPic);
-const submarineTexture = new PIXI.Texture.from(submarinePic);
+const boyTexture = new PIXI.Texture.from(boy);
+const girlTexture = new PIXI.Texture.from(girl);
 
 const screenWidth = window.innerWidth;
 const screenHeight = window.innerHeight;
@@ -17,12 +19,10 @@ const screenHeight = window.innerHeight;
 const mockArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 function Fish({ posX, posY, ...props }) {
-  // console.log(props)
   return <Sprite x={posX} y={posY} texture={fishTexture} scale={0.2} />;
 }
 
 function Net({ posX, posY, ...props }) {
-  // console.log(props)
   return (
     <Sprite
       x={posX}
@@ -35,15 +35,26 @@ function Net({ posX, posY, ...props }) {
   );
 }
 
-function PlayerShip({ posX, posY, ...props }) {
-  // console.log(props)
+function BoySprite({ posX, posY, ...props }) {
   return (
     <Sprite
       x={posX}
       y={posY}
-      scale={0.4}
-      texture={submarineTexture}
-      rotation={5 - 0.1}
+      scale={0.35}
+      texture={boyTexture}
+      rotation={1.15}
+    />
+  );
+}
+
+function GirlSprite({ posX, posY, ...props }) {
+  return (
+    <Sprite
+      x={posX}
+      y={posY}
+      scale={0.35}
+      texture={girlTexture}
+      rotation={-1.15}
     />
   );
 }
@@ -53,16 +64,17 @@ function Shooter() {
     const aux = mockArr.map(() => ({
       x: Math.floor(Math.random() * 800),
       y: Math.floor(Math.random() * 300),
+      stepX: Math.random(),
+      stepY: Math.random(),
+      caught: false,
     }));
 
     return aux;
   });
-
   const [nets, setNets] = useState([]);
-
-  const [player, setPlayer] = useState({ x: 400, y: 450 });
-
+  const [player, setPlayer] = useState({ x: 950, y: 750 });
   const [filters, setFilters] = useState([]);
+  const [score, setScore] = useState(0);
   const displacementRef = useRef(null);
   const reqRef = useRef(null);
 
@@ -76,22 +88,44 @@ function Shooter() {
 
   useEffect(() => {
     const animate = delta => {
-      const newFishes = fishes.map(it => {
-        const newPos = { ...it };
-        if (Math.floor(Math.random() * 2)) {
-          newPos.x = newPos.x + 0.4 * delta;
-        }
+      const updatedFishes = fishes.map(it => {
+        const newPos = {};
+        newPos.x = it.x + (it.stepX * delta);
+        newPos.y = it.y + (it.stepY * delta);
 
-        newPos.y = newPos.y + 0.1 * delta;
-
-        return { x: Math.abs(newPos.x), y: Math.abs(newPos.y) };
+        return { ...it, x: Math.abs(newPos.x), y: Math.abs(newPos.y) };
       });
 
-      const newNets = nets.map(it => {
+      const updatedNets = nets.map(it => {
         const newPos = { ...it, y: it.y - 4 * delta };
 
         return { ...newPos };
       });
+      
+      let flg = false;
+
+      updatedNets.forEach((net, netInd) => {
+        updatedFishes.forEach((fish, fishInd) => {
+          if(!net.catched && !fish.caught){
+            const [fishMinX, fishMaxX, fishMinY, fishMaxY] = [fish.x, fish.x + 30, fish.y, fish.y + 20];
+            const [netMinX, netMaxX, netMinY, netMaxY] = [net.x, net.x + 30, net.y, net.y + 30];
+
+            const xInRange = (fishMinX >= netMinX && fishMinX <= netMaxX) || (fishMaxX >= netMinX && fishMaxX <= netMaxX);
+            const yInRange = (fishMinY >= netMinY && fishMinY <= netMaxY) || (fishMaxY >= netMinY && fishMaxY <= netMaxY);
+            const collide = xInRange && yInRange;
+
+            net.catched = collide
+            fish.caught = collide
+            if(collide) net.y = -100
+            if(collide) setScore(prevScore => prevScore + 100);
+          }
+        })
+      })
+
+      const newFishes = updatedFishes.filter(it => !it.caught);
+      const newNets = updatedNets.filter(it => !it.catched);
+
+      if(flg) console.log(newNets);
 
       setFishes([...newFishes]);
       setNets([...newNets]);
@@ -125,20 +159,20 @@ function Shooter() {
 
   const shoot = () => {
     const { x, y } = player;
-    const newNet = { x, y: y - 20 };
+    const newNet = { x: x - 40, y: y - 20, catched: false };
     setNets([...nets, newNet]);
   };
 
   const logEvent = e => {
     console.log(e);
     if (e.code === 'ArrowRight') {
-      setPlayer({ ...player, x: player.x + 5 });
+      setPlayer({ ...player, x: player.x + 10 });
     } else if (e.code === 'ArrowLeft') {
-      setPlayer({ ...player, x: player.x - 5 });
+      setPlayer({ ...player, x: player.x - 10 });
     } else if (e.code === 'ArrowUp') {
-      setPlayer({ ...player, y: player.y + 5 });
+      setPlayer({ ...player, y: player.y - 10 });
     } else if (e.code === 'ArrowDown') {
-      setPlayer({ ...player, y: player.y - 5 });
+      setPlayer({ ...player, y: player.y + 10 });
     } else if (e.code === 'Space') {
       shoot();
     }
@@ -167,18 +201,24 @@ function Shooter() {
         />
         <Container position={[window.innerWidth / 2 + 500, 20]}>
           <Graphics x={0} y={10} draw={scoreBg} />
-          <Text position={[220, 35]} text={`Score: 100`} />
+          <Text position={[220, 35]} text={`Score: ${score}`} />
         </Container>
         <Container filters={filters}>
           {fishes.map(it => {
-            return <Fish posX={it.x} posY={it.y} />;
+            return !it.caught ? <Fish posX={it.x} posY={it.y}/> : null;
           })}
         </Container>
-        <Container position={[screenWidth / 4, screenHeight / 2]}>
-          {nets.map(it => (
-            <Net posX={it.x + 50} posY={it.y} />
-          ))}
-          <PlayerShip posX={player.x} posY={player.y} />
+        {/* <Container>
+          <Fish posX={500} posY={300}/>
+          <Net posX={500} posY={300} />
+        </Container> */}
+        <Container filters={filters}>
+          {nets.map(it => {
+            return !it.catched ? <Net posX={it.x} posY={it.y} /> : null;
+          })}
+        </Container>
+        <Container>
+          <BoySprite posX={player.x} posY={player.y} />
         </Container>
       </Stage>
       <Bubbles />
