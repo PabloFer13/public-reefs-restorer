@@ -3,14 +3,13 @@ import { Sprite, Stage, Container, Text, Graphics } from '@inlet/react-pixi';
 import * as PIXI from 'pixi.js';
 import fishPic from 'assets/images/shooter/pezLeon_pixel.png';
 import netPic from 'assets/images/shooter/red_pixel.png';
-import boy from 'assets/images/shooter/boy.png';
 import girl from 'assets/images/shooter/girl.png';
 import bgWater from 'assets/images/shooter/sea_pixel.png';
 import Bubbles from 'components/Bubbles';
+import RectangleBackground from 'components/Rectangle';
 
 const fishTexture = new PIXI.Texture.from(fishPic);
 const netTexture = new PIXI.Texture.from(netPic);
-const boyTexture = new PIXI.Texture.from(boy);
 const girlTexture = new PIXI.Texture.from(girl);
 
 const screenWidth = window.innerWidth;
@@ -35,18 +34,19 @@ function Net({ posX, posY, ...props }) {
   );
 }
 
-function BoySprite({ posX, posY, ...props }) {
+function GirlSprite({ posX, posY, ...props }) {
   return (
     <Sprite
       x={posX}
       y={posY}
       scale={0.35}
-      texture={boyTexture}
+      texture={girlTexture}
+      // rotation={-1.15}
     />
   );
 }
 
-function Shooter() {
+function MetalSlug() {
   const [fishes, setFishes] = useState(() => {
     const aux = mockArr.map(() => ({
       x: Math.floor(Math.random() * 800),
@@ -62,6 +62,8 @@ function Shooter() {
   const [player, setPlayer] = useState({ x: 950, y: 750 });
   const [filters, setFilters] = useState([]);
   const [score, setScore] = useState(0);
+  const [oxygen, setOxygen] = useState(45);
+  const [oxygenChange, setOxygenChange] = useState(5);
   const displacementRef = useRef(null);
   const reqRef = useRef(null);
 
@@ -72,6 +74,15 @@ function Shooter() {
     g.drawRoundedRect(180, 16, 200, 50, 25);
     g.endFill();
   }, []);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      console.log('Entra', oxygenChange, player);
+      setOxygen(prevOxygen => oxygenChange < 0 ? Math.max(prevOxygen + oxygenChange, 0) : Math.min(prevOxygen + oxygenChange, 45));
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [oxygenChange]);
 
   useEffect(() => {
     const animate = delta => {
@@ -158,8 +169,10 @@ function Shooter() {
       setPlayer({ ...player, x: player.x - 10 });
     } else if (e.code === 'ArrowUp') {
       setPlayer({ ...player, y: player.y - 10 });
+      if(player.y - 10 < 200 && oxygenChange < 0) setOxygenChange(5);
     } else if (e.code === 'ArrowDown') {
       setPlayer({ ...player, y: player.y + 10 });
+      if(player.y + 10 >= 200 && oxygenChange > 0) setOxygenChange(-3);
     } else if (e.code === 'Space') {
       shoot();
     }
@@ -190,22 +203,26 @@ function Shooter() {
           <Graphics x={0} y={10} draw={scoreBg} />
           <Text position={[220, 35]} text={`Score: ${score}`} />
         </Container>
+        <Container position={[window.innerWidth / 2, 25]}>
+          <RectangleBackground />
+          <Text
+            position={[0, 30]}
+            style={{ fontSize: 30, fill: oxygen > 30 ? 'black' : 'white' }}
+            text={`${oxygen}`}
+          />
+        </Container>
         <Container filters={filters}>
           {fishes.map(it => {
             return !it.caught ? <Fish posX={it.x} posY={it.y}/> : null;
           })}
         </Container>
-        {/* <Container>
-          <Fish posX={500} posY={300}/>
-          <Net posX={500} posY={300} />
-        </Container> */}
         <Container filters={filters}>
           {nets.map(it => {
             return !it.catched ? <Net posX={it.x} posY={it.y} /> : null;
           })}
         </Container>
         <Container>
-          <BoySprite posX={player.x} posY={player.y} />
+          <GirlSprite posX={player.x} posY={player.y} />
         </Container>
       </Stage>
       <Bubbles />
@@ -213,4 +230,4 @@ function Shooter() {
   );
 }
 
-export default Shooter;
+export default MetalSlug;

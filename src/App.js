@@ -13,8 +13,7 @@ import Level from 'containers/Level';
 // import Level2 from 'containers/Level2';
 // import Level3 from 'containers/Level3';
 
-import RotatingBunny from 'games/RotatingBunny';
-import BunnyWithCounter from 'games/BunnyWithCounter';
+import MetalSlug from 'games/MetalSlug';
 import SlidePuzzle from 'games/SlidePuzzle';
 import Memory from 'games/Memory';
 import Shooter from 'games/Shooter';
@@ -28,7 +27,7 @@ const App = () => (
         <Route exact path="/mar-caribe" component={Level} />
         <Route exact path="/shooter" component={Shooter} />
         <Route exact path="/hidenseek" component={HideNSeek} />
-        <Route exact path="/bunny-with-counter" component={BunnyWithCounter} />
+        <Route exact path="/metal-slug" component={MetalSlug} />
         <Route exact path="/slidepuzzle" component={SlidePuzzle} />
         <Route exact path="/memory" component={Memory} />
         <Redirect to="/" />

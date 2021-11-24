@@ -87,7 +87,7 @@ const Level = () => {
       y: screenHeight / 2 + 50,
       scale: 0.75,
       texture: new PIXI.Texture.from(red),
-      goTo: '/hidenseek'
+      goTo: '/metal-slug'
     },
   ];
 
